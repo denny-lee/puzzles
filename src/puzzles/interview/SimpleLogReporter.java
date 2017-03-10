@@ -20,6 +20,8 @@ import java.util.TreeSet;
  * @author wb-lw252418
  *
  * QUESTION: use java coding implement cat "/log/*.log" | grep "Login" | uniq -c | sort -nr
+ * 
+ * TODO  nio read big file. ensure string's integerity
  */
 public class SimpleLogReporter {
 
