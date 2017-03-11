@@ -25,12 +25,13 @@ import java.util.TreeSet;
  */
 public class SimpleLogReporter {
 
-	private static final String LINE_END = "\r\n";
+	private static final String LINE_END = "\n";
 	
 	public static void main(String[] args) {
 //		String filePattern = "/log/*.log";
 //		String filePattern = "/home/admin/output/*.log";
-		String filePattern = "D:/testLog/*.log";
+//		String filePattern = "D:/testLog/*.log";
+		String filePattern = "/var/log/*.log";
 //		String keyWord = args[0];
 		String keyWord = "Login";
 		// cat log
@@ -104,8 +105,8 @@ public class SimpleLogReporter {
 			return;
 		}
 		FileChannel fc = null;
-//		ByteBuffer byteBuf = ByteBuffer.allocate(1024 << 4); // 16M
-		ByteBuffer byteBuf = ByteBuffer.allocate(1024 << 4); // 2G-1byte
+//		ByteBuffer byteBuf = ByteBuffer.allocate(1024 << 4); // 16K
+		ByteBuffer byteBuf = ByteBuffer.allocate(1024 << 13); // 16M
 		int readSize = -1;
 		String content = null;
 		for(File f : files) {

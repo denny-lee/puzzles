@@ -30,7 +30,9 @@ import java.util.concurrent.LinkedBlockingDeque;
  */
 public class MultiThreadLogReporter {
 	
-	private static final String FILE_PATH = "/log/*.log";
+//	private static final String FILE_PATH = "/log/*.log";
+	private static final String FILE_PATH = "/var/log";
+	private static final String EOF= "nullll";
 	private static int count = 2;
 	private static CountDownLatch latch = new CountDownLatch(count);
 
@@ -45,6 +47,7 @@ public class MultiThreadLogReporter {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		System.out.println("start sort!");
 		sortReverse(map);
 		service.shutdown();
 	}
@@ -64,12 +67,15 @@ public class MultiThreadLogReporter {
 	}
 
 	static class Hub {
-		private BlockingQueue<String> queue = new LinkedBlockingDeque<String>(3000);
+		private BlockingQueue<String> queue = new LinkedBlockingDeque<String>(1000);
 		public void inHub(String str) throws InterruptedException {
 			queue.put(str);
 		}
 		public String outHub() throws InterruptedException {
 			return queue.take();
+		}
+		public boolean isEmpty() {
+			return queue.isEmpty();
 		}
 	}
 	
@@ -85,6 +91,7 @@ public class MultiThreadLogReporter {
 		
 		@Override
 		public void run() {
+			System.out.println("start uniqDealer!");
 			String line = null;
 			Integer count = null;
 			while(true) {
@@ -93,10 +100,11 @@ public class MultiThreadLogReporter {
 				} catch (InterruptedException e) {
 					System.out.println("outHub been interrupt!!");
 				}
-				if("quit".equals(line)) {
+				if(EOF.equals(line)) {
 					break;
 				}
 				if(null == line) {
+					System.out.println("you should not have seen this!");
 					continue;
 				}
 				count = map.get(line);
@@ -106,6 +114,7 @@ public class MultiThreadLogReporter {
 					map.put(line, count.intValue() + 1);
 				}
 			}
+			System.out.println("uniqDealer done!");
 			latch.countDown();
 		}
 		
@@ -145,6 +154,9 @@ public class MultiThreadLogReporter {
 				try {
 					br = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
 					while ((line = br.readLine()) != null) {
+						if(null == line || "".equals(line)) {
+							continue;
+						}
 						if(line.contains(KEY)) {
 							try {
 								hub.inHub(line);
@@ -165,6 +177,12 @@ public class MultiThreadLogReporter {
 						br = null;
 					}
 				}
+			}
+			System.out.println("file reader done.");
+			try {
+				hub.inHub(EOF);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 			latch.countDown();
 		}
