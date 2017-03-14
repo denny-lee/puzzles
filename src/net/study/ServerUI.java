@@ -2,6 +2,7 @@ package net.study;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -52,7 +53,8 @@ class JTextFrame extends JFrame {
 	
 	JTextFrame() {
 		msgBox = new MessageBox();
-		inputZone = new JTextArea(10, 100);
+		inputZone = new JTextArea(10, 50);
+		inputZone.setFont(new Font("Î¢ÈíÑÅºÚ", Font.PLAIN, 18));
 		inputZone.setLineWrap(true);
 		// bind key
 		inputZone.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK), "sendMsg");
