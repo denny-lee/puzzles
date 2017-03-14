@@ -5,12 +5,18 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 import javax.swing.SwingWorker;
 
 /**
@@ -47,8 +53,19 @@ class JTextFrame extends JFrame {
 	JTextFrame() {
 		msgBox = new MessageBox();
 		inputZone = new JTextArea(10, 100);
-		out = new JTextArea(10, 100);
 		inputZone.setLineWrap(true);
+		// bind key
+		inputZone.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK), "sendMsg");
+		Action sendAction = new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				send();
+			}
+		};
+		inputZone.getActionMap().put("sendMsg", sendAction);
+		
+		out = new JTextArea(10, 100);
 		out.setLineWrap(true);
 		out.setEditable(false);
 		out.setBackground(Color.BLACK);
@@ -70,6 +87,18 @@ class JTextFrame extends JFrame {
 		this.getContentPane().add(out, BorderLayout.NORTH);
 		this.getContentPane().add(inputZone, BorderLayout.CENTER);
 		this.getContentPane().add(btnPanel, BorderLayout.SOUTH);
+	}
+	
+	private void send() {
+		String msg = inputZone.getText();
+		try {
+			msgBox.put(msg);
+			inputZone.setText("");
+			String old = out.getText();
+			out.setText(old + "\r\n" + "消息已发送！");
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
 	}
 	
 	private class ClickListener implements ActionListener {
@@ -111,15 +140,7 @@ class JTextFrame extends JFrame {
 			}
 			if(e.getSource() == send_btn) {
 				System.out.println("send message.");
-				String msg = inputZone.getText();
-				try {
-					msgBox.put(msg);
-					inputZone.setText("");
-					String old = out.getText();
-					out.setText(old + "\r\n" + "消息已发送！");
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				}
+				send();
 				return;
 			}
 		}
