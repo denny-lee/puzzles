@@ -85,22 +85,22 @@ public class MsgServer {
         serverSocketChannel.socket().bind(new InetSocketAddress(port));  
         selector = Selector.open();  
         inited = true;
-        System.out.println("·şÎñÆ÷Æô¶¯");  
+        System.out.println("æœåŠ¡å™¨å¯åŠ¨");  
 	}
 	public void destroy() throws IOException {
 		serverSocketChannel.close();
 		serverSocketChannel = null;
 		selector.close();
 		selector = null;
-		System.out.println("·şÎñ·ÏÁË");
+		System.out.println("æœåŠ¡åºŸäº†");
 		inited = false;
 	}
-	/* ±àÂë¹ı³Ì */  
+	/* ç¼–ç è¿‡ç¨‹ */  
     public ByteBuffer encode(String str) {  
         return charset.encode(str);  
     }  
   
-    /* ½âÂë¹ı³Ì */  
+    /* è§£ç è¿‡ç¨‹ */  
     public String decode(ByteBuffer bb) {  
         return charset.decode(bb).toString();  
     } 

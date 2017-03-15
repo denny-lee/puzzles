@@ -54,7 +54,7 @@ class JTextFrame extends JFrame {
 	JTextFrame() {
 		msgBox = new MessageBox();
 		inputZone = new JTextArea(10, 50);
-		inputZone.setFont(new Font("Î¢ÈíÑÅºÚ", Font.PLAIN, 18));
+		inputZone.setFont(new Font("å¾®è½¯é›…é»‘", Font.PLAIN, 18));
 		inputZone.setLineWrap(true);
 		// bind key
 		inputZone.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK), "sendMsg");
@@ -72,9 +72,9 @@ class JTextFrame extends JFrame {
 		out.setEditable(false);
 		out.setBackground(Color.BLACK);
 		out.setForeground(Color.GREEN);
-		start_btn = new JButton("Æô¶¯·şÎñ");
-		stop_btn = new JButton("Í£Ö¹·şÎñ");
-		send_btn = new JButton("·¢ËÍ");
+		start_btn = new JButton("å¯åŠ¨æœåŠ¡");
+		stop_btn = new JButton("åœæ­¢æœåŠ¡");
+		send_btn = new JButton("å‘é€");
 		start_btn.addActionListener(new ClickListener());
 		stop_btn.addActionListener(new ClickListener());
 		send_btn.addActionListener(new ClickListener());
@@ -97,7 +97,7 @@ class JTextFrame extends JFrame {
 			msgBox.put(msg);
 			inputZone.setText("");
 			String old = out.getText();
-			out.setText(old + "\r\n" + "ÏûÏ¢ÒÑ·¢ËÍ£¡");
+			out.setText(old + "\r\n" + "æ¶ˆæ¯å·²å‘é€ï¼");
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
@@ -119,7 +119,7 @@ class JTextFrame extends JFrame {
 					start_btn.setEnabled(false);
 					stop_btn.setEnabled(true);
 					send_btn.setEnabled(true);
-					out.setText(old + "\r\n" + "·şÎñÆô¶¯³É¹¦£¡");
+					out.setText(old + "\r\n" + "æœåŠ¡å¯åŠ¨æˆåŠŸï¼");
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
