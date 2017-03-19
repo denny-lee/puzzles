@@ -36,6 +36,10 @@ public class ProjectManager {
 		FilenameFilter filter = new FilenameFilter() {
 			@Override
 			public boolean accept(File dir, String name) {
+				String path = dir.getAbsolutePath();
+				if(path.indexOf("\\dist") > 0 || path.indexOf("\\node_modules") > 0) {
+					return false;
+				}
 				for(String s : withoutSuffix) {
 					if(name.endsWith(s)) {
 						return false;

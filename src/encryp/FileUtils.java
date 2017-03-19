@@ -47,8 +47,11 @@ public class FileUtils {
 	}
 	
 	public static void del() throws Exception {
-		String[] cmd = new String[]{"cmd", "/c", "del mybaks\\*"};
-		Process p = Runtime.getRuntime().exec(cmd, null, new File("D:/"));
+		String[] cmd = new String[]{"cmd", "/c", "del /S /F /Q D:\\mybaks\\*"};
+		Process p = Runtime.getRuntime().exec(cmd);
+		p.waitFor();
+		String[] cmd2 = new String[]{"cmd", "/c", "rd D:\\mybaks"};
+		p = Runtime.getRuntime().exec(cmd2);
 		p.waitFor();
 	}
 	

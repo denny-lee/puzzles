@@ -5,15 +5,15 @@ import java.io.File;
 public class Encryptor {
 
 	public void doEnc(File from, File to) throws Exception {
-//		String projectRoot = "D:/front_works/auiplug";
-//		new ProjectManager().copyForBak(projectRoot);
+		String projectRoot = "D:/front_works/aegis_sat_front";
+		new ProjectManager().copyForBak(projectRoot);
 		//zip
-//		FileUtils.zip();
-//		FileUtils.del();
+		FileUtils.zip();
+		FileUtils.del();
 		//encrypt
-//		FileUtils.enc();
+		FileUtils.enc();
 		
-		FileUtils.deEnc();
+//		FileUtils.deEnc();
 	}
 	
 	public static void main(String[] args) {
