@@ -26,7 +26,7 @@ public class FileServer {
     private Charset charset = Charset.forName("UTF-8");  
     private Selector selector = null;
     
-	public FileServer(MessageBox msgBox) {
+	public FileServer() {
 		try {
 			init();
 		} catch (IOException e) {
@@ -44,6 +44,8 @@ public class FileServer {
 	public void service() throws IOException {
 		serverSocketChannel.configureBlocking(false);
 		serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+		FileChannel fc = FileChannel.open(new File(FileUtils.ENC_NAME).toPath(), EnumSet.of(StandardOpenOption.READ));
+		ByteBuffer bb = ByteBuffer.allocate(1024 << 4);
 		while (selector.select() > 0) {  
 			Iterator iterator = selector.selectedKeys().iterator();  
 			while (iterator.hasNext()) {  
@@ -54,19 +56,28 @@ public class FileServer {
                     if (key.isAcceptable()) {  
                         ServerSocketChannel ssc = (ServerSocketChannel) key.channel();  
                         SocketChannel sc = ssc.accept(); 
-                        System.out.println("here comes one client: " + sc.getLocalAddress());
+                        System.out.println("here comes one client: " + sc.getRemoteAddress());
                         sc.configureBlocking(false);  
-                        sc.register(selector, SelectionKey.OP_WRITE);
+                        sc.register(selector, SelectionKey.OP_READ);
+                        key.interestOps(SelectionKey.OP_ACCEPT);
                     }  
-                    if (key.isWritable()) { 
-                    	SocketChannel client = (SocketChannel) key.channel();
-                    	ByteBuffer buf = ByteBuffer.allocate(1024 << 18);
-                    	FileChannel fc = FileChannel.open(new File(FileUtils.ENC_NAME).toPath(), EnumSet.of(StandardOpenOption.READ));
-                    	fc.read(buf);
-                    	buf.flip();
-                    	client.write(buf);
-                    	buf.clear();
-                    	fc.close();
+                    if (key.isReadable()) { 
+                    	SocketChannel sc = (SocketChannel) key.channel();
+                    	ByteBuffer echo = ByteBuffer.allocate(3);
+                    	int read = sc.read(echo);
+                    	if(read > 0) {
+                    		echo.clear();
+                    		int remain = fc.read(bb);
+                    		if(remain > 0) {
+                    			bb.flip();
+                        		int w = sc.write(bb);
+                            	System.out.println(w);
+                    		} else {
+                    			fc.close();
+                    		}
+                        	bb.clear();
+                        	key.interestOps(SelectionKey.OP_READ);
+                    	}
                     }  
                 } catch (IOException e) {  
                     e.printStackTrace();  
@@ -84,10 +95,9 @@ public class FileServer {
 	}
 	
 	public void init() throws IOException {
+		selector = Selector.open();  
         serverSocketChannel = ServerSocketChannel.open();  
-        serverSocketChannel.socket().setReuseAddress(true);  
         serverSocketChannel.socket().bind(new InetSocketAddress(port));  
-        selector = Selector.open();  
         inited = true;
         System.out.println("服务器启动");  
 	}
@@ -108,4 +118,12 @@ public class FileServer {
     public String decode(ByteBuffer bb) {  
         return charset.decode(bb).toString();  
     } 
+    
+    public static void main(String[] args) {
+    	try {
+			new FileServer().start();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
 }
