@@ -17,7 +17,11 @@ public class FileClient {
 	    String fileName = "D:/log4j.properties";
 	    String hostIp = "30.35.52.19";
 	    int port = 9991;
-	    int bufferSize = 1024 << 10;
+	    new FileClient().sendFile(fileName, hostIp, port);
+	}
+	
+	public void sendFile(String fileName, String hostIp, int port) throws IOException {
+		int bufferSize = 1024 << 18;
 	    int n = 0;
 	    int read = 0;
 
