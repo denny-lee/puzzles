@@ -30,9 +30,8 @@ public class FileClient {
 	    socket.connect(new InetSocketAddress(hostIp, port));
 	    Selector selector = Selector.open();
 	    socket.register(selector, SelectionKey.OP_CONNECT);
-	    String filePath = (fileName);
 
-	    FileOutputStream out = new FileOutputStream(filePath);
+	    FileOutputStream out = new FileOutputStream(fileName);
 	    FileChannel file = out.getChannel();
 	    ByteBuffer buffer = ByteBuffer.allocate(bufferSize);
 
